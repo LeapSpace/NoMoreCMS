@@ -8,7 +8,7 @@
 
 //static const $Config;
 
-class NMMysql{
+class NMMysql extends NBase{
 	public $_LINK;
 	
 	/*
@@ -18,11 +18,16 @@ class NMMysql{
 	 */
 	function __construct($dbName = null){
 		//链接数据库
-		$_LINK = @mysql_connect($Config['host_m'][0] . ":" . $Config['host_m'][1], $Config['host_m'][2], $Config['host_m'][3]);
+		$dbName = empty($dbName)?NM::$config['db']['dbname']:$dbName;
+		if(empty($dbName)){
+			throw new NException('no database');
+		}
+		$port = empty(self::$config['db']['port'])?'3306':NM::$config['db']['port'];
+		$_LINK = @mysql_connect(NM::$config['db']['host'] . ":" . $port, NM::$config['db']['user'], NM::$config['db']['passwd']);
 		if(!$_LINK){
 			die("db_connect failed with error:" . mysql_error());
 		}else{
-			$dbSelect = mysql_select_db($Config['dbname'], $_LINK);
+			$dbSelect = mysql_select_db(NM::$dbName, $_LINK);
 			@mysql_query('set names utf8');
 			if(!$dbSelect){
 				die("db_select failed with error:" . mysql_error($_LINK));
@@ -71,7 +76,11 @@ class NMMysql{
 		}
 		return mysql_fetch_assoc($result);
 	}
-
+	
+	//返回影响执行语句影响的行数
+	public function affectRows(){
+		return mysql_affected_rows($this->_LINK);
+	}
 
 	/*执行SQL语句*/
 	public function runSql($sql){
