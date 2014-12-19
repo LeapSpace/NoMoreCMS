@@ -14,7 +14,7 @@ class NM{
 		self::$config = $config;
 
 		//url解析
-		$request = urlParse($_SERVER['REQUEST_URI']);
+		$request = NMurlParse($_SERVER['REQUEST_URI']);
 		self::$router = $request;
 
 		$modules = array();
@@ -39,7 +39,7 @@ class NM{
 		if(file_exists(ModulePath.DIRECTORY_SEPARATOR.$nowModule.DIRECTORY_SEPARATOR.ucwords($nowModule).'Module.php')){
 			require(ModulePath.DIRECTORY_SEPARATOR.$nowModule.DIRECTORY_SEPARATOR.ucwords($nowModule).'Module.php');
 			//return new $class(self::$config);
-			$module = ucwords($nowModule).'Module.php';
+			$module = ucwords($nowModule).'Module';
 			return new $module(self::$config);
 		}else{
 			throw new NException('request error');
@@ -58,6 +58,7 @@ class NM{
 	
 	private static $_coreClasses = array(
 		'NBase' => '/base/NBase.class.php',
+		'NModule' => '/module/NModule.class.php',
 		'NDb' => '/db/NDb.class.php',
 		'NLog' => '/log/NLog.class.php',
 		'NCache' => '/NCache/cache.class.php',

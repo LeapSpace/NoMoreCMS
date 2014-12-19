@@ -10,7 +10,10 @@ class NBase{
 		throw new NException('method : '.$name.'does\'nt exist !');
 	}
 	
-	public function render(){
-	
-	};
+	public function render($view,array $param){
+		//
+	}
+
+	public function loadModel($modelName){
+	}
 }

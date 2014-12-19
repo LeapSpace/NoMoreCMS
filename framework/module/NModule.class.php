@@ -6,20 +6,46 @@ class NModule{
 	public function __construct($config){
 		self::$config = $config;
 		$tmpModule = get_called_class();
-		self::$nowModule[] = $tmpModule;
-		self::$modulePath = ModulePath.implode(DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR,self::$nowModule);
-		$tmp = count($nowModule);
-		$modules = empty(NM::$router)?NM::$config['DefaultModule']:NM::$router;
+		$tmpModule = NMescapeString($tmpModule,'Module');
+		self::$nowModule[] = strtolower($tmpModule);
+		self::$modulePath = ModulePath.DIRECTORY_SEPARATOR.implode('modules'.DIRECTORY_SEPARATOR,self::$nowModule);
+		$tmp = count(self::$nowModule);
+		//print_r(self::$nowModule);
+		$modules = empty(NM::$router)?array(NM::$config['DefaultModule']):NM::$router;
 		//优先路由至当前module下的controller，如果没有对应名称的controller则尝试调用当前module下子module，如果还没有，返回尝试调用当前模块下的默认controller
 		//$next = 
-		$now = $modules[$tmp];
-		$next = isset($modules[$tmp+1])?$modules[$tmp+1]:'';
-		//test controllers
+		$now = $modules[$tmp-1];
+		$next = isset($modules[$tmp])?$modules[$tmp]:'';
+		//test controllers if exists
 		$c = ucwords($next).'Controller.php';
+		//echo self::$modulePath.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.$c;
 		if(file_exists(self::$modulePath.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.$c)){
-			require();
+			require(self::$modulePath.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.$c);
+			$method = isset($modules[$tmp+1])?$modules[$tmp+1]:'IndexAction';
+			if(is_callable(array(ucwords($next), $method))){
+				call_user_func(array(ucwords($next), $method));
+			}else{
+				throw new NException('no such method');
+			}
 		}else{
-			self::loadModule($next);
+			//test modules if exists
+			$tmpModules = array();
+			NMgetDirFile(self::$modulePath.DIRECTORY_SEPARATOR.'modules',$tmpModules);
+			if(in_array($next, $tmpModules)){
+				self::loadModule($next);
+			}else{
+				echo self::$modulePath.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.ucwords($tmpModule).'Controller.php';
+				if(file_exists(self::$modulePath.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.ucwords($tmpModule).'Controller.php')){
+					if(is_callable(array(ucwords($tmpModule).'Controller', 'IndexAction'))){
+						call_user_func(array(ucwords($tmpModule).'Controller', 'IndexAction'));
+					}else{
+						throw new NException('no such method');
+					}
+					//call_user_func(array(ucwords($tmpModule).'Controller', 'IndexAction'));
+				}else{
+					throw new NException('no module found!');
+				}
+			}
 		}
 	}
 
@@ -27,5 +53,9 @@ class NModule{
 		require(self::$modulePath.DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.ucwords($moduleName).'Module.php');
 		//父模块子模块同名会有问题(类名相同)
 		return new $moduleName(self::$config);
+	}
+
+	public static function import(){
+		//
 	}
 }
