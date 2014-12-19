@@ -21,6 +21,7 @@ function NMgetDirFile($path, &$files){
 	} 
 	closedir($handle); 
 }
+
 //url请求解析，决定路由走向
 function urlParse($url){
 	$match = array();

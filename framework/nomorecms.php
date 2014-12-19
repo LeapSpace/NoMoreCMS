@@ -36,10 +36,11 @@ class NM{
 		$class = empty($request[1])?'default':$request[1];
 		$class = ucwords($class).'Controller';
 		*/
-		if(file_exists(ModulePath.DIRECTORY_SEPARATOR.$nowModule.DIRECTORY_SEPARATOR.'DefaultModule.php')){
-			require(ModulePath.DIRECTORY_SEPARATOR.$nowModule.DIRECTORY_SEPARATOR.'DefaultModule.php');
+		if(file_exists(ModulePath.DIRECTORY_SEPARATOR.$nowModule.DIRECTORY_SEPARATOR.ucwords($nowModule).'Module.php')){
+			require(ModulePath.DIRECTORY_SEPARATOR.$nowModule.DIRECTORY_SEPARATOR.ucwords($nowModule).'Module.php');
 			//return new $class(self::$config);
-			return new DefaultModule(self::$config);
+			$module = ucwords($nowModule).'Module.php';
+			return new $module(self::$config);
 		}else{
 			throw new NException('request error');
 		}
