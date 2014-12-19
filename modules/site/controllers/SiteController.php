@@ -1,6 +1,6 @@
 <?php
 class DefaultController extends NBase{
-	public function indexAction(){
+	public function IndexAction(){
 		echo 'hehe';
 	}
 }
