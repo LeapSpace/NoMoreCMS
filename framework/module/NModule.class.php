@@ -37,6 +37,7 @@ class NModule{
 			if(!empty($next) && in_array($next, $tmpModules)){
 				self::loadModule($next);
 			}else{
+				echo self::$modulePath.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.ucwords($tmpModule).'Controller.php';
 				if(file_exists(self::$modulePath.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.ucwords($tmpModule).'Controller.php')){
 					require(self::$modulePath.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.ucwords($tmpModule).'Controller.php');
 					NM::$modulePath = self::$modulePath;
