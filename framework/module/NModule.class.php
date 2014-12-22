@@ -20,9 +20,11 @@ class NModule{
 
 		if(file_exists(self::$modulePath.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.$c)){
 			require(self::$modulePath.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.$c);
-			$method = isset($modules[$tmp+1])?$modules[$tmp+1]:'IndexAction';
-			if(is_callable(array(ucwords($next), $method))){
-				$controller = ucwords($next);
+			NM::$modulePath = self::$modulePath;
+			//echo 'here'.NM::$modulePath;
+			$method = isset($modules[$tmp+1])?ucwords($modules[$tmp+1].'Action'):'IndexAction';
+			$controller = ucwords($next).'Controller';
+			if(is_callable(array($controller, $method))){
 				$c = new $controller(self::$config);
 				call_user_func(array($c, $method));
 			}else{
@@ -32,15 +34,17 @@ class NModule{
 			//test modules if exists
 			$tmpModules = array();
 			NMgetDirFile(self::$modulePath.DIRECTORY_SEPARATOR.'modules',$tmpModules);
-			if(in_array($next, $tmpModules)){
+			if(!empty($next) && in_array($next, $tmpModules)){
 				self::loadModule($next);
 			}else{
 				if(file_exists(self::$modulePath.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.ucwords($tmpModule).'Controller.php')){
 					require(self::$modulePath.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.ucwords($tmpModule).'Controller.php');
-					if(is_callable(array(ucwords($tmpModule).'Controller', 'IndexAction'))){
+					NM::$modulePath = self::$modulePath;
+					$method = empty($next)?'IndexAction':ucwords($next.'Action');
+					if(is_callable(array(ucwords($tmpModule).'Controller', $method))){
 						$controller = ucwords($tmpModule).'Controller';
 						$c = new $controller(self::$config);
-						call_user_func(array($c, 'IndexAction'));
+						call_user_func(array($c, $method));
 					}else{
 						throw new NException('no such method');
 					}

@@ -7,6 +7,7 @@ class NM{
 	public static $log;
 	public static $router = array();
 	public static $config = array();
+	public static $modulePath;
 	public $module;
 
 	public static function runApp($config){
