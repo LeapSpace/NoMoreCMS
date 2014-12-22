@@ -16,13 +16,11 @@ class NM{
 
 		//url解析
 		if($_SERVER['DOCUMENT_ROOT'] != NMPath){
-			$request = trim(str_replace(str_replace('/',DIRECTORY_SEPARATOR,$_SERVER['DOCUMENT_ROOT'].$_SERVER['REQUEST_URI']),'',NMPath));
+			$request = trim(str_replace(NMPath,'',$_SERVER['DOCUMENT_ROOT'].$_SERVER['REQUEST_URI']));
 		}else{
 			$request = $_SERVER['REQUEST_URI'];
 		}
 		$request = NMurlParse($request);
-
-		print_r($request);
 
 		self::$router = $request;
 
