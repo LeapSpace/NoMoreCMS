@@ -24,7 +24,14 @@ class NBase{
 				}
 			}
 			$param = null;
+			ob_start();
 			include(NM::$modulePath.DIRECTORY_SEPARATOR.'view'.DIRECTORY_SEPARATOR.$view.'.php');
+			$content = ob_get_contents();
+			if(!empty($this->layout)){
+				include(NM::$modulePath.DIRECTORY_SEPARATOR.'view'.DIRECTORY_SEPARATOR.$this->layout.'.php');
+			}else{
+				include(NM::$modulePath.DIRECTORY_SEPARATOR.'view'.DIRECTORY_SEPARATOR.'layout.php');
+			}
 		}
 	}
 
