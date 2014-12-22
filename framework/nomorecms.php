@@ -16,7 +16,9 @@ class NM{
 
 		//url解析
 		if($_SERVER['DOCUMENT_ROOT'] != NMPath){
-			$request = trim(str_replace(NMPath,'',$_SERVER['DOCUMENT_ROOT'].$_SERVER['REQUEST_URI']));
+			$match = array();
+			$m = preg_match('/[\/\w]+/',$_SERVER['REQUEST_URI'],$match);
+			$request = trim(str_replace(NMPath,'',$_SERVER['DOCUMENT_ROOT'].$match[0]));
 		}else{
 			$request = $_SERVER['REQUEST_URI'];
 		}
