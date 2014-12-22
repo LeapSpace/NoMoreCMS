@@ -5,5 +5,6 @@ class AdminController extends NBase{
 	}
 	public function TestAction(){
 		echo 'haha';
+		echo $_SERVER['DOCUMENT_ROOT'] ;
 	}
 }

@@ -15,7 +15,15 @@ class NM{
 		self::$config = $config;
 
 		//url解析
-		$request = NMurlParse($_SERVER['REQUEST_URI']);
+		if($_SERVER['DOCUMENT_ROOT'] != NMPath){
+			$request = trim(str_replace(str_replace('/',DIRECTORY_SEPARATOR,$_SERVER['DOCUMENT_ROOT'].$_SERVER['REQUEST_URI']),'',NMPath));
+		}else{
+			$request = $_SERVER['REQUEST_URI'];
+		}
+		$request = NMurlParse($request);
+
+		print_r($request);
+
 		self::$router = $request;
 
 		$modules = array();
