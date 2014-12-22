@@ -2,8 +2,10 @@
 class NBase{
 	public static $config;
 	public static $nowModule;
+	public $layout;
 	public function __construct($config){
 		self::$config = $config;
+		$this->layout = null;
 	}
 
 	public function __call($name, $arguments=null){
@@ -28,11 +30,15 @@ class NBase{
 			include(NM::$modulePath.DIRECTORY_SEPARATOR.'view'.DIRECTORY_SEPARATOR.$view.'.php');
 			$content = ob_get_contents();
 
-			$this->layout = empty($this->layout)?'layout':$this->layout;
-			if(file_exists(NM::$modulePath.DIRECTORY_SEPARATOR.'view'.DIRECTORY_SEPARATOR.$this->layout.'.php')){
-				include(NM::$modulePath.DIRECTORY_SEPARATOR.'view'.DIRECTORY_SEPARATOR.$this->layout.'.php');
-			}else{
+			if($this->layout===false){
 				echo $content;
+			}else{
+				$this->layout = empty($this->layout)?'layout':$this->layout;
+				if(file_exists(NM::$modulePath.DIRECTORY_SEPARATOR.'view'.DIRECTORY_SEPARATOR.$this->layout.'.php')){
+					include(NM::$modulePath.DIRECTORY_SEPARATOR.'view'.DIRECTORY_SEPARATOR.$this->layout.'.php');
+				}else{
+					echo $content;
+				}
 			}
 		}
 	}
