@@ -11,7 +11,7 @@ class NModule{
 		self::$modulePath = ModulePath.DIRECTORY_SEPARATOR.implode('modules'.DIRECTORY_SEPARATOR,self::$nowModule);
 		$tmp = count(self::$nowModule);
 		//print_r(self::$nowModule);
-		$modules = empty(NM::$router)?array(NM::$config['DefaultModule']):NM::$router;
+		$modules = empty(NM::$router)?array(NM::$config['defaultModule']):NM::$router;
 		//优先路由至当前module下的controller，如果没有对应名称的controller则尝试调用当前module下子module，如果还没有，返回尝试调用当前模块下的默认controller
 		$now = $modules[$tmp-1];
 		$next = isset($modules[$tmp])?$modules[$tmp]:'';
