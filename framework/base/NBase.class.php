@@ -30,7 +30,9 @@ class NBase{
 			if(!empty($this->layout)){
 				include(NM::$modulePath.DIRECTORY_SEPARATOR.'view'.DIRECTORY_SEPARATOR.$this->layout.'.php');
 			}else{
-				include(NM::$modulePath.DIRECTORY_SEPARATOR.'view'.DIRECTORY_SEPARATOR.'layout.php');
+				if(file_exists((NM::$modulePath.DIRECTORY_SEPARATOR.'view'.DIRECTORY_SEPARATOR.'layout.php'))){
+					include(NM::$modulePath.DIRECTORY_SEPARATOR.'view'.DIRECTORY_SEPARATOR.'layout.php');
+				}
 			}
 		}
 	}
