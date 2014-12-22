@@ -27,12 +27,12 @@ class NBase{
 			ob_start();
 			include(NM::$modulePath.DIRECTORY_SEPARATOR.'view'.DIRECTORY_SEPARATOR.$view.'.php');
 			$content = ob_get_contents();
-			if(!empty($this->layout)){
+
+			$this->layout = empty($this->layout)?'layout':$this->layout;
+			if(file_exists(NM::$modulePath.DIRECTORY_SEPARATOR.'view'.DIRECTORY_SEPARATOR.$this->layout.'.php')){
 				include(NM::$modulePath.DIRECTORY_SEPARATOR.'view'.DIRECTORY_SEPARATOR.$this->layout.'.php');
 			}else{
-				if(file_exists((NM::$modulePath.DIRECTORY_SEPARATOR.'view'.DIRECTORY_SEPARATOR.'layout.php'))){
-					include(NM::$modulePath.DIRECTORY_SEPARATOR.'view'.DIRECTORY_SEPARATOR.'layout.php');
-				}
+				echo $content;
 			}
 		}
 	}
