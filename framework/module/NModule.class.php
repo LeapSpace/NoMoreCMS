@@ -13,17 +13,18 @@ class NModule{
 		//print_r(self::$nowModule);
 		$modules = empty(NM::$router)?array(NM::$config['DefaultModule']):NM::$router;
 		//优先路由至当前module下的controller，如果没有对应名称的controller则尝试调用当前module下子module，如果还没有，返回尝试调用当前模块下的默认controller
-		//$next = 
 		$now = $modules[$tmp-1];
 		$next = isset($modules[$tmp])?$modules[$tmp]:'';
 		//test controllers if exists
 		$c = ucwords($next).'Controller.php';
-		//echo self::$modulePath.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.$c;
+
 		if(file_exists(self::$modulePath.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.$c)){
 			require(self::$modulePath.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.$c);
 			$method = isset($modules[$tmp+1])?$modules[$tmp+1]:'IndexAction';
 			if(is_callable(array(ucwords($next), $method))){
-				call_user_func(array(ucwords($next), $method));
+				$controller = ucwords($next);
+				$c = new $controller(self::$config);
+				call_user_func(array($c, $method));
 			}else{
 				throw new NException('no such method');
 			}
@@ -34,10 +35,12 @@ class NModule{
 			if(in_array($next, $tmpModules)){
 				self::loadModule($next);
 			}else{
-				echo self::$modulePath.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.ucwords($tmpModule).'Controller.php';
 				if(file_exists(self::$modulePath.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.ucwords($tmpModule).'Controller.php')){
+					require(self::$modulePath.DIRECTORY_SEPARATOR.'controllers'.DIRECTORY_SEPARATOR.ucwords($tmpModule).'Controller.php');
 					if(is_callable(array(ucwords($tmpModule).'Controller', 'IndexAction'))){
-						call_user_func(array(ucwords($tmpModule).'Controller', 'IndexAction'));
+						$controller = ucwords($tmpModule).'Controller';
+						$c = new $controller(self::$config);
+						call_user_func(array($c, 'IndexAction'));
 					}else{
 						throw new NException('no such method');
 					}

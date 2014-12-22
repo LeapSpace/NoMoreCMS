@@ -40,6 +40,7 @@ class NM{
 			require(ModulePath.DIRECTORY_SEPARATOR.$nowModule.DIRECTORY_SEPARATOR.ucwords($nowModule).'Module.php');
 			//return new $class(self::$config);
 			$module = ucwords($nowModule).'Module';
+			//echo ModulePath.DIRECTORY_SEPARATOR.$nowModule.DIRECTORY_SEPARATOR.ucwords($nowModule).'Module.php';
 			return new $module(self::$config);
 		}else{
 			throw new NException('request error');
