@@ -16,14 +16,7 @@ class NBase{
 		//
 		if(file_exists(NM::$modulePath.DIRECTORY_SEPARATOR.'view'.DIRECTORY_SEPARATOR.$view.'.php')){
 			if(isset($param) && is_array($param)){
-				foreach($param as $key=>$v){
-					if(is_string($key)){
-						$$key = $v;
-					}else{
-						$key = null;
-						$v = null;
-					}
-				}
+				extract($param);
 			}
 			$param = null;
 			ob_start();
