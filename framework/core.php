@@ -25,7 +25,7 @@ function NMgetDirFile($path, &$files){
 //url请求解析，决定路由走向
 function NMurlParse($url){
 	$match = array();
-	if(preg_match('/^[\/0-9a-zA-Z]+$/',$url,$match)){
+	if(preg_match('/^[\/0-9a-zA-Z_-]+$/',$url,$match)){
 		return explode('/', trim($match[0],'/'));
 	}else{
 		return false;

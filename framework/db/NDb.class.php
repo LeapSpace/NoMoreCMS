@@ -8,7 +8,7 @@
 
 //static const $Config;
 
-class NDb extends NBase{
+abstract class NDb{
 	protected static $dbConfig;
 	/*
 	 *	@func __construct

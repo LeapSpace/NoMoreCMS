@@ -3,17 +3,20 @@
 require_once('core.php');
 
 class NM{
-	protected static $mysql;
 	public static $log;
 	public static $router = array();
 	public static $config = array();
 	public static $modulePath;
-	public $module;
+	public static $module;
+	public static $path;
+	public static $request; //框架执行路线
 
 	public static function runApp($config){
 		require($config);
 		self::$config = $config;
-
+		
+		//框架相对于web根的目录
+		self::$path = str_replace($_SERVER['DOCUMENT_ROOT'],'',NMPath);
 		//url解析
 		if($_SERVER['DOCUMENT_ROOT'] != NMPath){
 			$match = array();
@@ -49,6 +52,7 @@ class NM{
 			require(ModulePath.DIRECTORY_SEPARATOR.$nowModule.DIRECTORY_SEPARATOR.ucwords($nowModule).'Module.php');
 			//return new $class(self::$config);
 			$module = ucwords($nowModule).'Module';
+			self::$request .= '/'.strtolower(NMescapeString($module,'Module'));
 			//echo ModulePath.DIRECTORY_SEPARATOR.$nowModule.DIRECTORY_SEPARATOR.ucwords($nowModule).'Module.php';
 			return new $module(self::$config);
 		}else{
@@ -70,6 +74,7 @@ class NM{
 		'NBase' => '/base/NBase.class.php',
 		'NModule' => '/module/NModule.class.php',
 		'NDb' => '/db/NDb.class.php',
+		'NMysql' => '/db/NMysql.class.php',
 		'NLog' => '/log/NLog.class.php',
 		'NCache' => '/NCache/cache.class.php',
 		'NException' => '/exception/NException.class.php'
